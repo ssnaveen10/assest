@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2b1a12">
+<title>The Cocoa Bar — Chocolate &amp; Tequila Lounge</title>
+<style>
+  :root {
+    --bg: #201209;
+    --bg-2: #2b1a12;
+    --card: #3a2417;
+    --card-2: #462c1c;
+    --cocoa: #8b5a2b;
+    --caramel: #d9a05b;
+    --cream: #f5e6d3;
+    --gold: #e8b923;
+    --agave: #7fb069;
+    --danger: #e07a5f;
+    --radius: 18px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--cream);
+    line-height: 1.6;
+    padding-bottom: 84px; /* room for bottom nav */
+  }
+  h1, h2, h3 { font-weight: 700; letter-spacing: .5px; }
+  section { padding: 28px 18px; max-width: 640px; margin: 0 auto; }
+
+  /* ---------- Hero ---------- */
+  header.hero {
+    background:
+      radial-gradient(ellipse at 20% -10%, #5a3620 0%, transparent 55%),
+      radial-gradient(ellipse at 90% 10%, #4a2a15 0%, transparent 50%),
+      linear-gradient(180deg, var(--bg-2), var(--bg));
+    text-align: center;
+    padding: 56px 20px 40px;
+    border-bottom: 2px solid var(--cocoa);
+  }
+  .hero .logo { font-size: 3.2rem; }
+  .hero h1 {
+    font-size: 2.1rem;
+    color: var(--caramel);
+    margin: 8px 0 4px;
+  }
+  .hero .tagline {
+    font-style: italic;
+    color: var(--cream);
+    opacity: .85;
+    font-size: 1.02rem;
+  }
+  .hero .badges {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: var(--card);
+    border: 1px solid var(--cocoa);
+    color: var(--caramel);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: .82rem;
+  }
+
+  /* ---------- Cards & headings ---------- */
+  .section-title {
+    color: var(--gold);
+    font-size: 1.45rem;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-sub { opacity: .75; font-size: .95rem; margin-bottom: 18px; }
+  .card {
+    background: linear-gradient(160deg, var(--card), var(--bg-2));
+    border: 1px solid #5a3620;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 10px 2px;
+    border-bottom: 1px dashed #5a3620;
+  }
+  .menu-item:last-child { border-bottom: none; }
+  .menu-item .name { font-size: 1.02rem; color: var(--cream); }
+  .menu-item .desc { display: block; font-size: .84rem; opacity: .65; font-style: italic; }
+  .menu-item .price { color: var(--gold); white-space: nowrap; font-size: 1rem; }
+
+  /* ---------- Tequila zone ---------- */
+  #tequila { text-align: center; }
+  .shot-stage {
+    background: linear-gradient(160deg, #3d2415, #241207);
+    border: 1px solid var(--cocoa);
+    border-radius: var(--radius);
+    padding: 22px 14px 26px;
+  }
+  .shot-count {
+    font-size: 3.4rem;
+    line-height: 1.1;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+  }
+  .shot-count-label { font-size: .9rem; opacity: .75; margin-bottom: 4px; }
+  .shot-status {
+    min-height: 1.6em;
+    margin: 10px 0 18px;
+    font-style: italic;
+    color: var(--caramel);
+    font-size: 1.02rem;
+    transition: color .3s;
+  }
+  .glass-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+  .shot-glass {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    transition: transform .12s ease;
+    touch-action: manipulation;
+  }
+  .shot-glass:active { transform: scale(.88); }
+  .shot-glass svg { width: 52px; height: 66px; display: block; }
+  .shot-glass .liquid { transition: height .45s ease, y .45s ease; }
+  .shot-glass.empty svg { opacity: .38; }
+  .shot-glass.drinking { animation: gulp .5s ease; }
+  @keyframes gulp {
+    0%   { transform: rotate(0deg); }
+    40%  { transform: rotate(-28deg) translateY(-6px); }
+    100% { transform: rotate(0deg); }
+  }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    font-family: inherit;
+    font-size: 1rem;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 26px;
+    cursor: pointer;
+    min-height: 48px;
+    touch-action: manipulation;
+    transition: transform .1s ease, filter .15s ease;
+  }
+  .btn:active { transform: scale(.96); filter: brightness(1.15); }
+  .btn-gold { background: linear-gradient(180deg, var(--gold), #c49a10); color: #241207; font-weight: bold; }
+  .btn-outline { background: transparent; color: var(--caramel); border: 1.5px solid var(--cocoa); }
+  .lime-splash {
+    position: fixed;
+    font-size: 1.6rem;
+    pointer-events: none;
+    animation: floatUp 1s ease-out forwards;
+    z-index: 50;
+  }
+  @keyframes floatUp {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to   { opacity: 0; transform: translateY(-70px) scale(1.5); }
+  }
+  .disclaimer {
+    margin-top: 18px;
+    font-size: .78rem;
+    opacity: .55;
+  }
+
+  /* ---------- Info / hours ---------- */
+  .hours-table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+  .hours-table td { padding: 7px 4px; border-bottom: 1px dashed #5a3620; }
+  .hours-table tr:last-child td { border-bottom: none; }
+  .hours-table td:last-child { text-align: right; color: var(--caramel); }
+
+  /* ---------- Bottom nav ---------- */
+  nav.bottom {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(32, 18, 9, .96);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--cocoa);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+    z-index: 100;
+  }
+  nav.bottom a {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: .72rem;
+    text-align: center;
+    opacity: .8;
+    min-width: 64px;
+    padding: 4px 0;
+  }
+  nav.bottom a .ico { display: block; font-size: 1.35rem; margin-bottom: 2px; }
+  nav.bottom a:active { opacity: 1; color: var(--gold); }
+
+  footer {
+    text-align: center;
+    padding: 26px 18px 40px;
+    font-size: .82rem;
+    opacity: .6;
+  }
+
+  @media (min-width: 560px) {
+    .hero h1 { font-size: 2.6rem; }
+    .shot-glass svg { width: 60px; height: 76px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero" id="home">
+  <div class="logo">🍫</div>
+  <h1>The Cocoa Bar</h1>
+  <p class="tagline">Where dark chocolate meets golden agave</p>
+  <div class="badges">
+    <span class="badge">☕ Artisan Cocoa</span>
+    <span class="badge">🥃 Premium Tequila</span>
+    <span class="badge">🌙 Open Late</span>
+  </div>
+</header>
+
+<section id="about">
+  <h2 class="section-title">🌱 Our Story</h2>
+  <p class="section-sub">A little lounge with a big obsession.</p>
+  <div class="card">
+    <p>The Cocoa Bar began with a simple idea: the world's two finest indulgences —
+    <strong>single-origin cocoa</strong> and <strong>100% blue agave tequila</strong> —
+    belong on the same table. We roast our beans in-house, temper our chocolate daily,
+    and pour tequilas aged in oak barrels.</p>
+    <p style="margin-top:10px;">Come for the sipping chocolate. Stay for the shots.
+    Leave with a story.</p>
+  </div>
+  <div class="card">
+    <h3 style="color:var(--caramel); margin-bottom:8px;">Why cocoa &amp; tequila?</h3>
+    <p style="font-size:.95rem;">Both are born from ancient Mesoamerican tradition —
+    the Aztecs prized cacao as currency and fermented agave as a sacred drink.
+    Dark chocolate's bitterness softens tequila's fire; agave's sweetness lifts
+    the cocoa's depth. A match 3,000 years in the making.</p>
+  </div>
+</section>
+
+<section id="menu">
+  <h2 class="section-title">📜 Cocoa Menu</h2>
+  <p class="section-sub">Hand-crafted, bean to cup.</p>
+  <div class="card">
+    <div class="menu-item">
+      <span class="name">Classic Sipping Chocolate
+        <span class="desc">70% dark, steamed cream, cinnamon dust</span></span>
+      <span class="price">$6</span>
+    </div>
+    <div class="menu-item">
+      <span class="name">Aztec Spiced Cocoa
+        <span class="desc">Chili, vanilla &amp; smoked salt — the original recipe</span></span>
+      <span class="price">$7</span>
+    </div>
+    <div class="menu-item">
+      <span class="name">Salted Caramel Mocha
+        <span class="desc">Espresso, house caramel, whipped cream</span></span>
+      <span class="price">$8</span>
+    </div>
+    <div class="menu-item">
+      <span class="name">Cocoa-Rimmed Margarita
+        <span class="desc">Reposado, lime, cocoa-salt rim</span></span>
+      <span class="price">$12</span>
+    </div>
+    <div class="menu-item">
+      <span class="name">Chocolate Fondue Board
+        <span class="desc">Fruit, churros &amp; brownie bites for two</span></span>
+      <span class="price">$16</span>
+    </div>
+  </div>
+
+  <h2 class="section-title" style="margin-top:26px;">🥃 Tequila Shelf</h2>
+  <p class="section-sub">All 100% blue Weber agave.</p>
+  <div class="card">
+    <div class="menu-item">
+      <span class="name">Blanco
+        <span class="desc">Bright, peppery, unaged — the purest agave hit</span></span>
+      <span class="price">$7</span>
+    </div>
+    <div class="menu-item">
+      <span class="name">Reposado
+        <span class="desc">Rested 6 months in oak — vanilla &amp; honey notes</span></span>
+      <span class="price">$9</span>
+    </div>
+    <div class="menu-item">
+      <span class="name">Añejo
+        <span class="desc">Aged 18 months — caramel, dried fruit, silk</span></span>
+      <span class="price">$12</span>
+    </div>
+    <div class="menu-item">
+      <span class="name">Chocolate-Infused Extra Añejo
+        <span class="desc">Our house special. Cocoa nibs, 3-year barrel</span></span>
+      <span class="price">$15</span>
+    </div>
+  </div>
+</section>
+
+<section id="tequila">
+  <h2 class="section-title" style="justify-content:center;">🍋 Shot Counter</h2>
+  <p class="section-sub">Tap a full glass to knock it back. Salt, shot, lime — repeat!</p>
+
+  <div class="shot-stage">
+    <div class="shot-count-label">SHOTS DOWNED TONIGHT</div>
+    <div class="shot-count" id="count">0</div>
+    <div class="shot-status" id="status">The bar is open. Salud! 🎉</div>
+
+    <div class="glass-row" id="glassRow"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-gold" id="refillBtn">🍾 Refill the Round</button>
+      <button class="btn btn-outline" id="resetBtn">💧 New Night (Reset)</button>
+    </div>
+
+    <p class="disclaimer">Please enjoy responsibly. 18+/21+ per local law. Never drink and drive. 🚕</p>
+  </div>
+</section>
+
+<section id="visit">
+  <h2 class="section-title">📍 Visit Us</h2>
+  <p class="section-sub">Find us glowing on the corner after dark.</p>
+  <div class="card">
+    <table class="hours-table">
+      <tr><td>Monday – Thursday</td><td>4 pm – 12 am</td></tr>
+      <tr><td>Friday – Saturday</td><td>4 pm – 2 am</td></tr>
+      <tr><td>Sunday</td><td>2 pm – 11 pm</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <p>🏠 42 Cacao Lane, Old Town</p>
+    <p>📞 (555) 010-2626</p>
+    <p>✉️ hola@thecocoabar.example</p>
+  </div>
+</section>
+
+<footer>
+  🍫 The Cocoa Bar &nbsp;·&nbsp; est. 2026 &nbsp;·&nbsp; This page works fully offline — save it and take it anywhere.
+</footer>
+
+<nav class="bottom">
+  <a href="#home"><span class="ico">🍫</span>Home</a>
+  <a href="#menu"><span class="ico">📜</span>Menu</a>
+  <a href="#tequila"><span class="ico">🥃</span>Shots</a>
+  <a href="#visit"><span class="ico">📍</span>Visit</a>
+</nav>
+
+<script>
+(function () {
+  var GLASSES = 6;
+  var row = document.getElementById('glassRow');
+  var countEl = document.getElementById('count');
+  var statusEl = document.getElementById('status');
+  var shots = 0;
+
+  var MESSAGES = [
+    [0,  'The bar is open. Salud! 🎉'],
+    [1,  'Smooth! That agave burn feels good. 🔥'],
+    [2,  'Two down — you’re warming up! 😄'],
+    [3,  'Tres! The mariachi band sounds louder now. 🎺'],
+    [4,  'Four shots — the room is getting cozy... 🥴'],
+    [5,  'Cinco! Maybe chase this one with our sipping cocoa? 🍫'],
+    [6,  'Six! You’ve cleared the whole round, campeón! 🏆'],
+    [8,  'Okay okay... how about some water, amigo? 💧'],
+    [10, 'Double digits?! Legend status — and a taxi is calling. 🚕'],
+    [12, 'The bartender respectfully suggests the fondue board instead. 🫕']
+  ];
+
+  function glassSVG() {
+    return '<svg viewBox="0 0 52 66" aria-hidden="true">' +
+      '<path d="M8 2 L14 62 Q14 64 16 64 L36 64 Q38 64 38 62 L44 2" fill="none" stroke="#f5e6d3" stroke-width="2.5" stroke-linejoin="round" opacity=".9"/>' +
+      '<rect class="liquid" x="12.5" y="22" width="27" height="39" rx="2" fill="#e8b923" opacity=".92"/>' +
+      '<ellipse cx="26" cy="23" rx="13" ry="2.4" fill="#f7d354"/>' +
+      '</svg>';
+  }
+
+  function buildGlasses() {
+    row.innerHTML = '';
+    for (var i = 0; i < GLASSES; i++) {
+      var b = document.createElement('button');
+      b.className = 'shot-glass';
+      b.setAttribute('aria-label', 'Drink tequila shot');
+      b.innerHTML = glassSVG();
+      b.addEventListener('click', drink);
+      row.appendChild(b);
+    }
+  }
+
+  function statusFor(n) {
+    var msg = MESSAGES[0][1];
+    for (var i = 0; i < MESSAGES.length; i++) {
+      if (n >= MESSAGES[i][0]) msg = MESSAGES[i][1];
+    }
+    return msg;
+  }
+
+  function limeSplash(x, y) {
+    var el = document.createElement('div');
+    el.className = 'lime-splash';
+    el.textContent = ['🍋','🧂','✨','🎉'][Math.floor(Math.random() * 4)];
+    el.style.left = (x - 14) + 'px';
+    el.style.top = (y - 14) + 'px';
+    document.body.appendChild(el);
+    setTimeout(function () { el.remove(); }, 1000);
+  }
+
+  function drink(e) {
+    var glass = e.currentTarget;
+    if (glass.classList.contains('empty') || glass.classList.contains('drinking')) return;
+
+    glass.classList.add('drinking');
+    var liquid = glass.querySelector('.liquid');
+    var meniscus = glass.querySelector('ellipse');
+    liquid.setAttribute('y', '58');
+    liquid.setAttribute('height', '3');
+    meniscus.style.opacity = '0';
+
+    shots++;
+    countEl.textContent = shots;
+    statusEl.textContent = statusFor(shots);
+    if (navigator.vibrate) navigator.vibrate(30);
+
+    var r = glass.getBoundingClientRect();
+    limeSplash(r.left + r.width / 2, r.top);
+
+    setTimeout(function () {
+      glass.classList.remove('drinking');
+      glass.classList.add('empty');
+    }, 500);
+  }
+
+  function refill() {
+    var glasses = row.querySelectorAll('.shot-glass');
+    glasses.forEach(function (g, i) {
+      setTimeout(function () {
+        g.classList.remove('empty');
+        var liquid = g.querySelector('.liquid');
+        var meniscus = g.querySelector('ellipse');
+        liquid.setAttribute('y', '22');
+        liquid.setAttribute('height', '39');
+        meniscus.style.opacity = '1';
+      }, i * 90);
+    });
+    statusEl.textContent = 'Fresh round on the bar! 🍾';
+  }
+
+  function reset() {
+    shots = 0;
+    countEl.textContent = '0';
+    refill();
+    statusEl.textContent = 'The bar is open. Salud! 🎉';
+  }
+
+  document.getElementById('refillBtn').addEventListener('click', refill);
+  document.getElementById('resetBtn').addEventListener('click', reset);
+  buildGlasses();
+})();
+</script>
+</body>
+</html>
